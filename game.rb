@@ -4,20 +4,39 @@ class Game
       @player2 = "X" # the computer's marker
       @player1 = "O" # the user's marker
       @modality = options[:modality]
+      @game_way = options[:game_way]
+      @players_turn = @player1
     end
   
     def start_game
       # start by printing the board
       draw_board(@board)
       # loop through until the game was won or tied
-      until game_is_over(@board) || tie(@board)
-        get_human_spot
-        if !game_is_over(@board) && !tie(@board)
-          eval_board(@modality)
+      game_way(@game_way)
+    end
+
+    def game_way(game_way)
+      case game_way
+      when 1
+        until game_is_over(@board) || tie(@board)
+          get_human_spot
+          if !game_is_over(@board) && !tie(@board)
+            eval_board(@modality)
+          end
+          draw_board(@board)
         end
-        draw_board(@board)
+        puts "Game over. Player #{@players_turn} wins."
+      when 2
+        until game_is_over(@board) || tie(@board)
+          get_human_spot
+          draw_board(@board)
+        end
+        puts "Game over. Player #{@players_turn} wins."
+      when 3
+        puts "3"
+      else
+        game_way(1)
       end
-      puts "Game over"
     end
   
     def get_human_spot
@@ -25,7 +44,7 @@ class Game
       until spot
         spot = get_spot;
         if @board[spot] != "X" && @board[spot] != "O"
-          @board[spot] = @player1
+          @board[spot] = @players_turn
         else
           spot = nil
         end
@@ -35,16 +54,22 @@ class Game
     def get_spot
       begin
         value = Integer(gets.chomp)
+        change_player
         if(value.between?(0,8))
-            return value
+          return value
         else 
-            puts "Input invalid. Enter [0-8]:"
-            get_spot
+          puts "Input invalid. Enter [0-8]:"
+          get_spot
         end
       rescue ArgumentError
         puts "Intup invalid. Enter [0-8]:"
         get_spot
       end
+    end
+
+    def change_player
+      players = [@player1, @player2]
+      @players_turn = players.select{|p| p != @players_turn}.first
     end
   
     def eval_board(modality)
@@ -52,11 +77,11 @@ class Game
       until spot
         if @board[4] == "4"
           spot = 4
-          @board[spot] = @player2
+          @board[spot] = @players_turn
         else
-          spot = get_move(modality, @board, @player2)
+          spot = get_move(modality, @board, @players_turn)
           if @board[spot] != "X" && @board[spot] != "O"
-            @board[spot] = @player2
+            @board[spot] = @players_turn
           else
             spot = nil
           end
@@ -78,10 +103,12 @@ class Game
     end
     
     def get_easy_move(board, next_player)
+      change_player
       n = board.select{|x| x != "X"}.shuffle.bsearch{ |x| x != "O"}.to_i
     end
 
     def get_middle_move(board, next_player)
+      change_player
       available_spaces = []
       available_spaces = board.select{|x| x != "X"}.select{|x| x != "O"}
       n = available_spaces.shuffle.first.to_i
@@ -90,17 +117,20 @@ class Game
 
 
     def get_best_move(board, next_player, depth = 0, best_score = {})
+      change_player
       available_spaces = []
       best_move = nil
       available_spaces = board.select{|x| x != "X"}.select{|x| x != "O"}
       available_spaces.each do |as|
-        board[as.to_i] = @player2
+        board[as.to_i] = @players_turn
         if game_is_over(board)
           best_move = as.to_i
           board[as.to_i] = as
           return best_move
         else
-          board[as.to_i] = @player1
+          change_player
+          board[as.to_i] = @players_turn
+          change_player
           if game_is_over(board)
             best_move = as.to_i
             board[as.to_i] = as
@@ -137,7 +167,7 @@ class Game
     def draw_board(b)
       system("clear")
       puts " #{b[0]} | #{b[1]} | #{b[2]} \n===+===+===\n #{b[3]} | #{b[4]} | #{b[5]} \n===+===+===\n #{b[6]} | #{b[7]} | #{b[8]} \n"
-      puts "Enter [0-8]:"
+      puts "Player #{@players_turn} Enter [0-8]:"
     end
   
   end  
