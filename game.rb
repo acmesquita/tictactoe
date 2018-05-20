@@ -76,39 +76,23 @@ class Game
         return get_easy_move(board, next_player)
       end
     end
-  
+    
     def get_easy_move(board, next_player)
-      available_spaces = []
-      board.each do |s|
-          if s != "X" && s != "O"
-              available_spaces << s
-          end
-      end
-      n = available_spaces.shuffle.first.to_i
-      available_spaces[n].to_i
+      n = board.select{|x| x != "X"}.shuffle.bsearch{ |x| x != "O"}.to_i
     end
 
     def get_middle_move(board, next_player)
       available_spaces = []
-      move = nil
-      board.each do |s|
-          if s != "X" && s != "O"
-              available_spaces << s
-          end
-      end
-
-      n = rand(0..available_spaces.count)
-      move = available_spaces[n].to_i
+      available_spaces = board.select{|x| x != "X"}.select{|x| x != "O"}
+      n = available_spaces.shuffle.first.to_i
+      available_spaces[n].to_i
     end
+
 
     def get_best_move(board, next_player, depth = 0, best_score = {})
       available_spaces = []
       best_move = nil
-      board.each do |s|
-        if s != "X" && s != "O"
-          available_spaces << s
-        end
-      end
+      available_spaces = board.select{|x| x != "X"}.select{|x| x != "O"}
       available_spaces.each do |as|
         board[as.to_i] = @player2
         if game_is_over(board)
