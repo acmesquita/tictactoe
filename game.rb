@@ -69,6 +69,8 @@ class Game
       when 1
         return get_easy_move(board, next_player)
       when 2
+        return get_middle_move(board, next_player)
+      when 3
         return get_best_move(board, next_player)
       else
         return get_easy_move(board, next_player)
@@ -82,8 +84,21 @@ class Game
               available_spaces << s
           end
       end
-      n = rand(0..available_spaces.count)
+      n = available_spaces.shuffle.first.to_i
       available_spaces[n].to_i
+    end
+
+    def get_middle_move(board, next_player)
+      available_spaces = []
+      move = nil
+      board.each do |s|
+          if s != "X" && s != "O"
+              available_spaces << s
+          end
+      end
+
+      n = rand(0..available_spaces.count)
+      move = available_spaces[n].to_i
     end
 
     def get_best_move(board, next_player, depth = 0, best_score = {})
