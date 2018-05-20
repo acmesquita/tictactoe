@@ -7,7 +7,8 @@ class Game
   
     def start_game
       # start by printing the board
-      puts " #{@board[0]} | #{@board[1]} | #{@board[2]} \n===+===+===\n #{@board[3]} | #{@board[4]} | #{@board[5]} \n===+===+===\n #{@board[6]} | #{@board[7]} | #{@board[8]} \n"
+      # puts " #{@board[0]} | #{@board[1]} | #{@board[2]} \n===+===+===\n #{@board[3]} | #{@board[4]} | #{@board[5]} \n===+===+===\n #{@board[6]} | #{@board[7]} | #{@board[8]} \n"
+      draw_board(@board)      
       puts "Enter [0-8]:"
       # loop through until the game was won or tied
       until game_is_over(@board) || tie(@board)
@@ -15,7 +16,8 @@ class Game
         if !game_is_over(@board) && !tie(@board)
           eval_board
         end
-        puts " #{@board[0]} | #{@board[1]} | #{@board[2]} \n===+===+===\n #{@board[3]} | #{@board[4]} | #{@board[5]} \n===+===+===\n #{@board[6]} | #{@board[7]} | #{@board[8]} \n"
+        draw_board(@board)
+        # puts " #{@board[0]} | #{@board[1]} | #{@board[2]} \n===+===+===\n #{@board[3]} | #{@board[4]} | #{@board[5]} \n===+===+===\n #{@board[6]} | #{@board[7]} | #{@board[8]} \n"
       end
       puts "Game over"
     end
@@ -96,6 +98,10 @@ class Game
   
     def tie(b)
       b.all? { |s| s == "X" || s == "O" }
+    end
+
+    def draw_board(b)
+        puts " #{b[0]} | #{b[1]} | #{b[2]} \n===+===+===\n #{b[3]} | #{b[4]} | #{b[5]} \n===+===+===\n #{b[6]} | #{b[7]} | #{b[8]} \n"
     end
   
   end  
