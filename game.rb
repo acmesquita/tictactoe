@@ -25,24 +25,34 @@ class Game
           end
           draw_board(@board)
         end
-        puts "Game over. Player #{@players_turn} wins."
+        finish_game(@board)
       when 2
         until game_is_over(@board) || tie(@board)
           get_human_spot
           draw_board(@board)
         end
-        puts "Game over. Player #{@players_turn} wins."
       when 3
-        puts "3"
+        until game_is_over(@board) || tie(@board)
+          eval_board(@modality)
+          draw_board(@board)
+          finish_game(@board)
+        end
       else
         game_way(1)
       end
     end
+
+    def finish_game(board)
+      if(game_is_over(board))
+        puts "Game over. Player #{@players_turn} wins."
+      else
+        puts "Game over. Deu velha"
+      end.
   
     def get_human_spot
       spot = nil
       until spot
-        spot = get_spot;
+        spot = get_spot
         if @board[spot] != "X" && @board[spot] != "O"
           @board[spot] = @players_turn
         else
