@@ -47,7 +47,8 @@ class Game
         puts "Game over. Player #{@players_turn} wins."
       else
         puts "Game over. Deu velha"
-      end.
+      end
+    end
   
     def get_human_spot
       spot = nil
